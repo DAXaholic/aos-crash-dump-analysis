@@ -5,6 +5,7 @@
 Set-StrictMode -Version Latest
 
 $application_files = "README.rst",
+                     "LICENSE",
                      "INSTALL.rst",
                      "common.ps1",
                      "analyse_crash_dump.ps1",

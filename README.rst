@@ -20,3 +20,12 @@ as sole argument. If everything was set up correctly, the script should output
 the context information followed by the call stack.
 
 .. _analyse_crash_dump.ps1: analyse_crash_dump.ps1
+
+
+License
+~~~~~~~~
+
+This project is released under the terms of the MIT license.
+See file LICENSE_ for more details.
+
+.. _LICENSE: LICENSE
