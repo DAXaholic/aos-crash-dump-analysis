@@ -14,12 +14,18 @@ function DumpFileName() {
 
 function AnalyseDump() {
     $dump_arg = DumpFileName
-    & py $analyse_impl_script_file $dump_arg
+    & $python2_exe $analyse_impl_script_file $dump_arg
 }
 
 function ThrowIfNoDebuggingTools() {
     if (!$debugging_tools_available) {
         throw "Environment variable 'WIN_DEBUGGING_TOOLS_PATH' doesn't exist"
+    }
+}
+
+function ThrowIfNoPython() {
+    if (!$python2_available) {
+        throw "Environment variable 'PYTHON2_PATH' doesn't exist"
     }
 }
 
@@ -32,6 +38,7 @@ function CheckArguments() {
 function Main() {
     CheckArguments
     ThrowIfNoDebuggingTools
+    ThrowIfNoPython
     AnalyseDump
 }
 

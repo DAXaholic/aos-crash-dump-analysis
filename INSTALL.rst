@@ -5,7 +5,9 @@ Dependencies
    the environment variable ``WIN_DEBUGGING_TOOLS_PATH`` which points to the
    installation directory.
 
- * Download and install PyKd_ from CodePlex.
+ * Download and install PyKd_ from CodePlex. Afterwards create an environment
+   variable ``PYTHON2_PATH`` pointing to the directory of python which was
+   installed during the PyKd installation.
 
  * If you want to set up the automatic dump analysis, you also need 7-Zip_.
    Download and install it and create an environment variable ``7ZIP_PATH``
