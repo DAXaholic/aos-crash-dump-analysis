@@ -17,6 +17,9 @@ $application_files = "README.rst",
                      "auto_analysis.ps1",
                      "run_powershell_script_silently.vbs"
 
+$symbol_server_dll_files = "dbghelp.dll",
+                           "symsrv.dll"
+
 function CurrentScriptDirectory() {
     return Split-Path $Script:MyInvocation.MyCommand.Path
 }
@@ -39,6 +42,14 @@ function InstallApplication() {
     CopyApplicationFilesToApplicationDirectory
 }
 
+function MakeSymbolServerDLLsAvailableToPyKd() {
+    $winext_path = Join-Path $debugging_tools_path "winext"
+    foreach ($dll in $symbol_server_dll_files) {
+        $dll_path = Join-Path $debugging_tools_path $dll
+        Copy-Item $dll_path $winext_path -Force
+    }
+}
+
 function ThrowIfNoDebuggingTools() {
     if (!($debugging_tools_available)) {
         throw "Environment variable 'WIN_DEBUGGING_TOOLS_PATH' doesn't exist"
@@ -47,6 +58,7 @@ function ThrowIfNoDebuggingTools() {
 
 function Main() {
     ThrowIfNoDebuggingTools
+    MakeSymbolServerDLLsAvailableToPyKd
     InstallApplication
 }
 
