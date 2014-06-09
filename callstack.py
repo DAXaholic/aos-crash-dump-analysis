@@ -32,18 +32,20 @@ _code_to_element_type = {
 
 
 def gather_data():
-    for native_frame in eval_func_native_frames():
+    for native_frame in xpp_native_frames():
         element_name = element_name_of_native_frame(native_frame)
         element_type = element_type_of_native_frame(native_frame)
         method_name = method_name_of_native_frame(native_frame)
         xpp_frames.append(XppFrame(element_type, element_name, method_name))
 
 
-
-def eval_func_native_frames():
-    for frame in getStack():
-        if 'xal_eval_func' in findSymbol(frame.instructionOffset):
-            yield frame
+def xpp_native_frames():
+    stack = getStack()
+    eval_func_caller_frames = []
+    for idx, frame in enumerate(stack):
+        if 'evalFunc' in findSymbol(frame.instructionOffset):
+            eval_func_caller_frames.append(stack[idx+1])
+    return eval_func_caller_frames
 
 
 def element_name_of_native_frame(frame):
