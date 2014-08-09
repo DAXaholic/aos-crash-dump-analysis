@@ -30,15 +30,15 @@ _code_to_element_type = {
 
 def get_xpp_frames():
     xpp_frames = []
-    for native_frame in xpp_native_frames():
-        element_name = element_name_of_native_frame(native_frame)
-        element_type = element_type_of_native_frame(native_frame)
-        method_name = method_name_of_native_frame(native_frame)
+    for raw_frame in xpp_raw_frames():
+        element_name = element_name_of_raw_frame(raw_frame)
+        element_type = element_type_of_raw_frame(raw_frame)
+        method_name = method_name_of_raw_frame(raw_frame)
         xpp_frames.append(XppFrame(element_type, element_name, method_name))
     return xpp_frames
 
 
-def xpp_native_frames():
+def xpp_raw_frames():
     stack = getStack()
     eval_func_caller_frames = []
     for idx, frame in enumerate(stack):
@@ -47,21 +47,21 @@ def xpp_native_frames():
     return eval_func_caller_frames
 
 
-def element_name_of_native_frame(frame):
-    element_id = element_id_of_native_frame(frame)
+def element_name_of_raw_frame(frame):
+    element_id = element_id_of_raw_frame(frame)
     meta_object_id = meta_object_id_of_frame(frame)
     if element_id == meta_object_id:
         return meta_object_name_of_frame(frame)
     else:
-        element_type = element_type_of_native_frame(frame)
+        element_type = element_type_of_raw_frame(frame)
         return "{}[{}]".format(element_type, element_id)
 
 
-def element_id_of_native_frame(frame):
+def element_id_of_raw_frame(frame):
     return ptrWord(frame.stackOffset + 32)
 
 
-def element_type_of_native_frame(frame):
+def element_type_of_raw_frame(frame):
     code = ptrByte(frame.stackOffset + 40)
     if code in _code_to_element_type:
         return _code_to_element_type[code]
@@ -87,8 +87,8 @@ def meta_object_name_of_frame(frame):
 
 def meta_object_addr_of_frame(frame):
     ax32serv = module('Ax32Serv')
-    element_type = element_type_of_native_frame(frame)
-    element_id = element_id_of_native_frame(frame)
+    element_type = element_type_of_raw_frame(frame)
+    element_id = element_id_of_raw_frame(frame)
     base_offset = 0
     first_lvl_offset = 72
     second_lvl_offset = 0
@@ -103,6 +103,6 @@ def meta_object_addr_of_frame(frame):
     return ptrPtr(ptrPtr(base_offset + first_lvl_offset) + second_lvl_offset)
 
 
-def method_name_of_native_frame(frame):
+def method_name_of_raw_frame(frame):
     name_addr = ptrPtr(frame.stackOffset + 8)
     return loadWStr(name_addr)
