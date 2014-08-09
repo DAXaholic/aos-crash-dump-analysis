@@ -36,23 +36,23 @@ _code_to_element_type = {
 
 def get_native_frames_until_first_xpp_frame():
     frames = getStack()
-    if xpp_raw_frames():
-        first_xpp_frame_number = xpp_raw_frames()[0].frameNumber
+    if _xpp_raw_frames():
+        first_xpp_frame_number = _xpp_raw_frames()[0].frameNumber
         frames = [f for f in frames if f.frameNumber < first_xpp_frame_number]
     return [NativeFrame(f.instructionOffset) for f in frames]
 
 
 def get_xpp_frames():
     xpp_frames = []
-    for raw_frame in xpp_raw_frames():
-        element_name = element_name_of_raw_frame(raw_frame)
-        element_type = element_type_of_raw_frame(raw_frame)
-        method_name = method_name_of_raw_frame(raw_frame)
+    for raw_frame in _xpp_raw_frames():
+        element_name = _element_name_of_raw_frame(raw_frame)
+        element_type = _element_type_of_raw_frame(raw_frame)
+        method_name = _method_name_of_raw_frame(raw_frame)
         xpp_frames.append(XppFrame(element_type, element_name, method_name))
     return xpp_frames
 
 
-def xpp_raw_frames():
+def _xpp_raw_frames():
     stack = getStack()
     eval_func_caller_frames = []
     for idx, frame in enumerate(stack):
@@ -61,21 +61,21 @@ def xpp_raw_frames():
     return eval_func_caller_frames
 
 
-def element_name_of_raw_frame(frame):
-    element_id = element_id_of_raw_frame(frame)
-    meta_object_id = meta_object_id_of_frame(frame)
+def _element_name_of_raw_frame(frame):
+    element_id = _element_id_of_raw_frame(frame)
+    meta_object_id = _meta_object_id_of_frame(frame)
     if element_id == meta_object_id:
-        return meta_object_name_of_frame(frame)
+        return _meta_object_name_of_frame(frame)
     else:
-        element_type = element_type_of_raw_frame(frame)
+        element_type = _element_type_of_raw_frame(frame)
         return "{}[{}]".format(element_type, element_id)
 
 
-def element_id_of_raw_frame(frame):
+def _element_id_of_raw_frame(frame):
     return ptrWord(frame.stackOffset + 32)
 
 
-def element_type_of_raw_frame(frame):
+def _element_type_of_raw_frame(frame):
     code = ptrByte(frame.stackOffset + 40)
     if code in _code_to_element_type:
         return _code_to_element_type[code]
@@ -83,26 +83,26 @@ def element_type_of_raw_frame(frame):
         return ElementType.xpp_unknown
 
 
-def meta_object_id_of_frame(frame):
-    id_addr = meta_object_addr_of_frame(frame) + 24
+def _meta_object_id_of_frame(frame):
+    id_addr = _meta_object_addr_of_frame(frame) + 24
     if isValid(id_addr):
         return ptrWord(id_addr)
     else:
         return 0
 
 
-def meta_object_name_of_frame(frame):
-    name_addr = ptrPtr(meta_object_addr_of_frame(frame) + 16)
+def _meta_object_name_of_frame(frame):
+    name_addr = ptrPtr(_meta_object_addr_of_frame(frame) + 16)
     if isValid(name_addr):
         return loadWStr(name_addr)
     else:
         return ''
 
 
-def meta_object_addr_of_frame(frame):
+def _meta_object_addr_of_frame(frame):
     ax32serv = module('Ax32Serv')
-    element_type = element_type_of_raw_frame(frame)
-    element_id = element_id_of_raw_frame(frame)
+    element_type = _element_type_of_raw_frame(frame)
+    element_id = _element_id_of_raw_frame(frame)
     base_offset = 0
     first_lvl_offset = 72
     second_lvl_offset = 0
@@ -117,6 +117,6 @@ def meta_object_addr_of_frame(frame):
     return ptrPtr(ptrPtr(base_offset + first_lvl_offset) + second_lvl_offset)
 
 
-def method_name_of_raw_frame(frame):
+def _method_name_of_raw_frame(frame):
     name_addr = ptrPtr(frame.stackOffset + 8)
     return loadWStr(name_addr)
