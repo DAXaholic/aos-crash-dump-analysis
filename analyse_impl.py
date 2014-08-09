@@ -39,15 +39,13 @@ def init_symbols():
 
 
 def show_context():
-    context.gather_data()
-    print("User ID:      {}".format(context.user))
-    print("Data Area ID: {}".format(context.dataarea))
-    print("Client:       {}".format(context.client))
+    print("User ID:      {}".format(context.get_user()))
+    print("Data Area ID: {}".format(context.get_data_area()))
+    print("Client:       {}".format(context.get_client()))
 
 
 def show_call_stack():
-    callstack.gather_data()
-    for frame in callstack.xpp_frames:
+    for frame in callstack.get_xpp_frames():
         print("{}::{}".format(frame.element_name, frame.method_name))
 
 

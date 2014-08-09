@@ -3,19 +3,19 @@ from pykd import loadWStr
 from pykd import ptrQWord
 
 
-user = ''
-dataarea = ''
-client = ''
-
-
-def gather_data():
-    global user
-    global dataarea
-    global client
+def get_user():
     base_address = _find_context_base_address()
-    user = _user_id_from_context(base_address)
-    dataarea = _data_area_id_from_context(base_address)
-    client = _client_name_from_context(base_address)
+    return _user_id_from_context(base_address)
+
+
+def get_data_area():
+    base_address = _find_context_base_address()
+    return _data_area_id_from_context(base_address)
+
+
+def get_client():
+    base_address = _find_context_base_address()
+    return _client_name_from_context(base_address)
 
 
 def _find_context_base_address():

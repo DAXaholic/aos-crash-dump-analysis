@@ -15,9 +15,6 @@ class XppFrame:
         self.method_name = method_name
 
 
-xpp_frames = []
-
-
 class ElementType:
     xpp_table = 'Table'
     xpp_class = 'Class'
@@ -31,12 +28,14 @@ _code_to_element_type = {
 }
 
 
-def gather_data():
+def get_xpp_frames():
+    xpp_frames = []
     for native_frame in xpp_native_frames():
         element_name = element_name_of_native_frame(native_frame)
         element_type = element_type_of_native_frame(native_frame)
         method_name = method_name_of_native_frame(native_frame)
         xpp_frames.append(XppFrame(element_type, element_name, method_name))
+    return xpp_frames
 
 
 def xpp_native_frames():
