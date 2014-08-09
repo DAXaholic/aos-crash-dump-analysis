@@ -45,8 +45,10 @@ def show_context():
 
 
 def show_call_stack():
+    for frame in callstack.get_native_frames_until_first_xpp_frame():
+        print(" Native | {} @{}".format(frame.symbol, hex(frame.ip)))
     for frame in callstack.get_xpp_frames():
-        print("{}::{}".format(frame.element_name, frame.method_name))
+        print("  X++   | {}::{}".format(frame.element_name, frame.method_name))
 
 
 if __name__ == '__main__':

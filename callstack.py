@@ -8,6 +8,12 @@ from pykd import ptrPtr
 from pykd import ptrWord
 
 
+class NativeFrame:
+    def __init__(self, ip):
+        self.ip = ip
+        self.symbol = findSymbol(ip)
+
+
 class XppFrame:
     def __init__(self, element_type, element_name, method_name):
         self.element_type = element_type
@@ -26,6 +32,14 @@ _code_to_element_type = {
     4: ElementType.xpp_class,
     5: ElementType.xpp_class
 }
+
+
+def get_native_frames_until_first_xpp_frame():
+    frames = getStack()
+    if xpp_raw_frames():
+        first_xpp_frame_number = xpp_raw_frames()[0].frameNumber
+        frames = [f for f in frames if f.frameNumber < first_xpp_frame_number]
+    return [NativeFrame(f.instructionOffset) for f in frames]
 
 
 def get_xpp_frames():
