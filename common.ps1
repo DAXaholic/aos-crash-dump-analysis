@@ -12,8 +12,13 @@ $python2_exe = Join-Path $python2_path "python.exe"
 $python2_available = Test-Path $python2_exe
 
 $7zip_path = $Env:7ZIP_PATH
-$7zip_exe = Join-Path $7zip_path "7z.exe"
-$7zip_available = Test-Path $7zip_exe
+if ($7zip_path -eq $null) {
+    $7zip_available = $false
+}
+else {
+    $7zip_exe = Join-Path $7zip_path "7z.exe"
+    $7zip_available = Test-Path $7zip_exe
+}
 
 $application_name = "AOSCrashDumpAnalysis"
 $application_path = Join-Path $Env:PROGRAMFILES $application_name
