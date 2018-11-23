@@ -10,6 +10,7 @@ Set-StrictMode -Version Latest
 
 $log_enabled = $false
 $dump_sources = @()
+$retention_period = [timespan]::Zero
 
 function CurrentScriptDirectory() {
     return Split-Path $Script:MyInvocation.MyCommand.Path
@@ -18,8 +19,15 @@ function CurrentScriptDirectory() {
 function Log($message) {
     Write-Host $message
     if ($log_enabled) {
-        Add-Content $log_file $message 
+        Add-Content $log_file $message
     }
+}
+
+function CleanUpDumpSourceMovePath($move_path) {
+    $now = [datetime]::UtcNow
+    Get-ChildItem -Path $move_path |
+        Where-Object { ($now - $_.CreationTimeUtc) -gt $retention_period } |
+        ForEach-Object { Remove-Item -Path $_.FullName -Force }
 }
 
 function AnalysisFileNameForDumpFile($dump) {
@@ -90,6 +98,7 @@ function ProcessDumpSource($source_path, $move_path) {
         ProcessDumpFile $d
         MoveDumpAndAnalysisFileToDestination $d $move_path
     }
+    CleanUpDumpSourceMovePath $move_path
 }
 
 function ProcessDumpSources {
@@ -100,12 +109,26 @@ function ProcessDumpSources {
     Log ("Finished on {0}" -f (Get-Date -Format s))
 }
 
+function ParsePeriodString($period_string) {
+    try {
+        return [System.Xml.XmlConvert]::ToTimeSpan($period_string)
+    }
+    catch {
+        return $null
+    }
+}
+
 function ReadConfigurationFile() {
     $xmldoc = [xml](Get-Content $config_file)
     $configuration = $xmldoc.configuration
     $options = $configuration.options
     $Script:log_enabled = $options.log -eq "true"
     $Script:dump_sources = $configuration.dump_source
+    $Script:retention_period = ParsePeriodString $options.retention_period
+    if ($Script:retention_period -eq $null) {
+        Log ("Retention period {0} is invalid." -f $options.retention_period)
+        $Script:retention_period = [timespan]::MaxValue
+    }
 }
 
 function Main() {

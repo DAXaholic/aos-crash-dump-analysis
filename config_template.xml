@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <configuration>
-    <options log='true' />
+    <options log='true' retention_period='P1M' />
     <!-- 
 
      Example tag for specifying a dump source. It is possible to
