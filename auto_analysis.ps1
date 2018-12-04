@@ -24,10 +24,18 @@ function Log($message) {
 }
 
 function CleanUpDumpSourceMovePath($move_path) {
+    if (!(Test-Path $move_path)) {
+        return
+    }
+
     $now = [datetime]::UtcNow
     Get-ChildItem -Path $move_path |
         Where-Object { ($now - $_.CreationTimeUtc) -gt $retention_period } |
         ForEach-Object { Remove-Item -Path $_.FullName -Force }
+
+    if (@(Get-ChildItem -Path $move_path).Count -eq 0) {
+        Remove-Item -Path $move_path
+    }
 }
 
 function AnalysisFileNameForDumpFile($dump) {
