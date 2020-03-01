@@ -7,9 +7,9 @@ Set-StrictMode -Version Latest
 $debugging_tools_path = $Env:WIN_DEBUGGING_TOOLS_PATH
 $debugging_tools_available = $debugging_tools_path -ne $null
 
-$python2_path = $Env:PYTHON2_PATH
-$python2_exe = Join-Path $python2_path "python.exe"
-$python2_available = Test-Path $python2_exe
+$python3_path = $Env:PYTHON3_PATH
+$python3_exe = Join-Path $python3_path "python.exe"
+$python3_available = Test-Path $python3_exe
 
 $7zip_path = $Env:7ZIP_PATH
 if ($7zip_path -eq $null) {

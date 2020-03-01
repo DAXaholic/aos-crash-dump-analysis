@@ -14,7 +14,7 @@ function DumpFileName() {
 
 function AnalyseDump() {
     $dump_arg = DumpFileName
-    & $python2_exe $analyse_impl_script_file $dump_arg
+    & $python3_exe $analyse_impl_script_file $dump_arg
 }
 
 function ThrowIfNoDebuggingTools() {
@@ -24,8 +24,8 @@ function ThrowIfNoDebuggingTools() {
 }
 
 function ThrowIfNoPython() {
-    if (!$python2_available) {
-        throw "Environment variable 'PYTHON2_PATH' doesn't exist"
+    if (!$python3_available) {
+        throw "Environment variable 'PYTHON3_PATH' doesn't exist"
     }
 }
 

@@ -35,7 +35,7 @@ _code_to_element_type = {
 
 
 def get_native_frames_until_first_xpp_frame():
-    frames = getStack()
+    frames = _get_stack_with_frame_numbers()
     if _xpp_raw_frames():
         first_xpp_frame_number = _xpp_raw_frames()[0].frameNumber
         frames = [f for f in frames if f.frameNumber < first_xpp_frame_number]
@@ -53,12 +53,20 @@ def get_xpp_frames():
 
 
 def _xpp_raw_frames():
-    stack = getStack()
+    stack = _get_stack_with_frame_numbers()
     eval_func_caller_frames = []
     for idx, frame in enumerate(stack):
         if 'evalFunc' in findSymbol(frame.instructionOffset):
             eval_func_caller_frames.append(stack[idx+1])
     return eval_func_caller_frames
+
+
+def _get_stack_with_frame_numbers():
+    ret = []
+    for idx, frame in enumerate(getStack()):
+        frame.frameNumber = idx
+        ret.append(frame)
+    return ret
 
 
 def _element_name_of_raw_frame(frame):

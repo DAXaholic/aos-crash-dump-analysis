@@ -5,9 +5,14 @@ Dependencies
    the environment variable ``WIN_DEBUGGING_TOOLS_PATH`` which points to the
    installation directory.
 
- * Download and install PyKd_ from CodePlex. Afterwards create an environment
-   variable ``PYTHON2_PATH`` pointing to the directory of python which was
-   installed during the PyKd installation.
+ * Download and install `Python 3`_ from the official site.
+   Afterwards create an environment variable ``PYTHON3_PATH`` pointing to the
+   installation directory.
+
+ * Install PyKd_ via PIP as described at their site.
+   In case the Python executable is not in your PATH environment variable an
+   alternative is to go to the Python installation directory and execute
+   `python.exe -m pip install pykd`
 
  * If you want to set up the automatic dump analysis, you also need 7-Zip_.
    Download and install it and create an environment variable ``7ZIP_PATH``
@@ -17,7 +22,8 @@ Dependencies
    You may need administrator rights to execute this script.
 
 .. _Debugging Tools for Windows: https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger
-.. _PyKd: http://pykd.codeplex.com/
+.. _Python 3: https://www.python.org/downloads
+.. _PyKd: https://githomelab.ru/pykd/pykd
 .. _7-Zip: http://www.7-zip.org/
 .. _install.ps1: install.ps1
 
