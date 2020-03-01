@@ -16,7 +16,7 @@ Dependencies
  * Execute the powershell script install.ps1_.
    You may need administrator rights to execute this script.
 
-.. _Debugging Tools for Windows: http://www.microsoft.com/whdc/devtools/debugging/default.mspx
+.. _Debugging Tools for Windows: https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger
 .. _PyKd: http://pykd.codeplex.com/
 .. _7-Zip: http://www.7-zip.org/
 .. _install.ps1: install.ps1
