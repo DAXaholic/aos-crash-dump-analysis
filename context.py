@@ -19,10 +19,13 @@ def get_client():
 
 
 def _find_context_base_address():
-    tls_slot_hex = dbgCommand('!tls 1a').split()[-1]
-    tls_slot_int = int(tls_slot_hex, 16) + 96
-    return ptrQWord(tls_slot_int)
+    tls_slot_int = _get_tls_slot_int(0x1a) or _get_tls_slot_int(0x21)
+    return ptrQWord(tls_slot_int + 96)
 
+def _get_tls_slot_int(index):
+    tls_command = '!tls {:x}'.format(index)
+    hex_value = dbgCommand(tls_command).split()[-1]
+    return int(hex_value, 16)
 
 def _user_id_from_context(base_address):
     user_id_addr = base_address + 348
