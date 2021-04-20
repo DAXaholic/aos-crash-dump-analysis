@@ -12,8 +12,9 @@ function CurrentScriptDirectory() {
 }
 
 function CreateScheduledTask() {
-    $task_command = "`"\`"$run_silent_ps_script_file\`" " +
-                    "\`"$auto_analysis_script_file\`"`""
+    $task_command = "wscript " +
+                    "'$run_silent_ps_script_file' " +
+                    "'$auto_analysis_script_file'"
     [void]$(schtasks /Create /TN $scheduled_task_name `
                      /SC MINUTE /MO 1 `
                      /TR $task_command)
